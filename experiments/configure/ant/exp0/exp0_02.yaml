@@ -1,0 +1,62 @@
+exp:
+    dir: ./experiments
+    ccl_id: exp0/exp0 
+    rl_id: exp0/exp0_02
+    pretrain_rl_id: #empty if not exist
+    data: ant
+    
+env:
+    obs_shape: 30
+    act_shape: 8
+    ag_shape: 2
+
+
+ccl:
+    data:
+        nb_data_gen: 10000
+        contrastive_sample_size: 128
+    distance:
+        type: dist_type3
+        scale: 0.01
+    feature:
+        type: mlp
+        feature_dim: 64
+        node_list: [256, 256, 64] #last node == feature_dim
+        activation_list: [relu, relu, sigmoid] 
+    similarity:
+        type: asymmetric
+        units: 32
+    classifier:
+        type: mlp
+        nb_subgoal: 10
+        node_list: [256, 256, 10] # last_node == nb_subgoal
+        activation_list: [relu, relu, softmax]
+    labeler:
+        max_beam_search: 60
+        plot_cycle: 10
+    ccl:
+        beta: 0.1
+        lamda: 10
+        c1: 1
+        learning_rate: 0.0001
+        relabel_freq: 1
+        nb_epoch: 50000
+        batch_size : 32
+
+svdd:
+    feature_dim: 64
+    node_list: [256, 256, 64] # last_node == svdd_featuer
+    l2_reg: 1.0e-6
+    quantile: 0.997
+    nb_training: 10000
+
+rl:
+    # reward_type 
+    total_timesteps: 1500000
+    learning_starts: 2000
+    learning_rate: 0.0001
+    reward_type : 0
+    svdd_type: hard
+    gamma: 0.99
+    use_her: False
+
